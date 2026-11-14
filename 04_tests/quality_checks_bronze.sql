@@ -1,23 +1,8 @@
-/*
-===============================================================================
-Chequeos de Completitud y Esquema - Capa Bronze
-===============================================================================
-Propósito del Script:
-    Este script realiza validaciones sobre la capa 'bronze' después de ejecutar
-    el procedimiento `bronze.load_bronze`:
-    - Verifica que las 6 tablas existan en el esquema 'bronze' y revisa sus columnas.
-    - Cuenta el total de registros cargados en cada tabla para validar la completitud
-      frente a los archivos CSV originales.
-    - Muestra una vista previa (TOP 10) de cada tabla para verificar que las columnas
-      no se hayan desplazado durante el BULK INSERT.
-===============================================================================
-*/
+-- Consultas para validar la carga y estructura de la capa Bronze
 USE DataWarehouse;
 GO
 
--- ====================================================================
--- 1. Verificación de Esquema y Tablas Creadas en 'bronze'
--- ====================================================================
+-- 1. Revisar tablas y columnas creadas en el esquema bronze
 SELECT 
     t.name AS nombre_tabla,
     c.column_id AS orden_columna,
@@ -32,9 +17,7 @@ WHERE s.name = 'bronze'
 ORDER BY t.name, c.column_id;
 GO
 
--- ====================================================================
--- 2. Conteo de Filas (Data Completeness Check)
--- ====================================================================
+-- 2. Contar filas cargadas en cada tabla
 SELECT 'bronze.crm_cust_info'     AS tabla, COUNT(*) AS total_filas FROM bronze.crm_cust_info
 UNION ALL
 SELECT 'bronze.crm_prd_info'      AS tabla, COUNT(*) AS total_filas FROM bronze.crm_prd_info
@@ -48,9 +31,7 @@ UNION ALL
 SELECT 'bronze.erp_px_cat_g1v2'   AS tabla, COUNT(*) AS total_filas FROM bronze.erp_px_cat_g1v2;
 GO
 
--- ====================================================================
--- 3. Inspección Visual de Datos Cargados (Muestra por Tabla)
--- ====================================================================
+-- 3. Vista previa de las primeras 10 filas por tabla
 SELECT TOP 10 * FROM bronze.crm_cust_info;
 SELECT TOP 10 * FROM bronze.crm_prd_info;
 SELECT TOP 10 * FROM bronze.crm_sales_details;

@@ -1,21 +1,8 @@
-/*
-===============================================================================
-Script DDL: Creación de Tablas de la Capa Silver
-===============================================================================
-Propósito del Script:
-    Este script crea las tablas en el esquema 'silver', eliminando las tablas 
-    existentes si ya existen.
-    Incluye columnas derivadas (como 'cat_id' en crm_prd_info), tipos de datos
-    corregidos (como DATE para fechas de ventas) y la columna técnica de 
-    auditoría 'dwh_create_date'.
-===============================================================================
-*/
+-- Creacion de tablas de la capa Silver
 USE DataWarehouse;
 GO
 
--- =============================================================================
 -- Tablas de CRM
--- =============================================================================
 
 IF OBJECT_ID('silver.crm_cust_info', 'U') IS NOT NULL
     DROP TABLE silver.crm_cust_info;
@@ -68,9 +55,7 @@ CREATE TABLE silver.crm_sales_details (
 );
 GO
 
--- =============================================================================
 -- Tablas de ERP
--- =============================================================================
 
 IF OBJECT_ID('silver.erp_loc_a101', 'U') IS NOT NULL
     DROP TABLE silver.erp_loc_a101;

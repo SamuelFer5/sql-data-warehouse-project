@@ -1,41 +1,19 @@
-# SQL Data Warehouse Project — Arquitectura Medallion
+# Proyecto Data Warehouse - Arquitectura Medallion
 
-Construcción de un almacén de datos moderno (*Data Warehouse*) en **SQL Server** implementando la **Arquitectura Medallion** (**Bronze**, **Silver** y **Gold**), integrando datos de ventas provenientes de dos sistemas de origen (**CRM** y **ERP**).
+Ejercicio de construcción de un Data Warehouse en SQL Server aplicando la arquitectura Medallion (capas Bronze, Silver y Gold) a partir de archivos CSV de dos sistemas origen: CRM y ERP.
 
----
+## Estructura de carpetas
 
-## 🏗️ Arquitectura de Datos (Medallion)
+- `00_setup/`: instrucciones básicas para levantar la base de datos.
+- `01_datasets/`: archivos CSV originales (`source_crm` y `source_erp`).
+- `02_docs/`: convenciones de nombres, roadmap y diagrama de flujo.
+- `03_scripts/`: scripts SQL separados por capa (`bronze`, `silver`, `gold`) y el script inicial `init_database.sql`.
+- `04_tests/`: consultas SQL para revisar que los datos se hayan cargado y limpiado bien.
 
-1. **Capa Bronze (Datos Originales):** Almacena los datos en bruto tal como vienen de los archivos CSV de origen (`CRM` y `ERP`) mediante procesos por lotes (`TRUNCATE` + `BULK INSERT`).
-2. **Capa Silver (Datos Depurados):** Limpieza, estandarización, normalización de datos y creación de columnas derivadas.
-3. **Capa Gold (Datos Analíticos):** Datos integrados y modelados en Esquema en Estrella (*Star Schema*: dimensiones `dim_` y hechos `fact_`) listos para reportes de BI y consultas analíticas.
+## Pasos para ejecutar
 
----
-
-## 📂 Estructura del Proyecto
-
-```text
-sql-data-warehouse-project/
-├── 00_setup/               Guía de configuración y ejecución del entorno.
-├── 01_datasets/            Archivos CSV de origen.
-│   ├── source_crm/         Archivos del sistema CRM (clientes, productos, ventas).
-│   └── source_erp/         Archivos del sistema ERP (categorías, ubicación, datos demográficos).
-├── 02_docs/                Convenciones de nomenclatura, flujo de datos y roadmap.
-├── 03_scripts/             Scripts SQL del Data Warehouse.
-│   ├── init_database.sql   Crea la base de datos DataWarehouse y los esquemas.
-│   ├── bronze/             DDL y Stored Procedure de carga para la capa Bronze.
-│   ├── silver/             DDL y transformaciones para la capa Silver.
-│   └── gold/               Vistas analíticas del modelo estrella para la capa Gold.
-└── 04_tests/               Scripts de validación y calidad de datos.
-```
-
----
-
-## 🚀 Inicio Rápido (Capa Bronze)
-
-1. Ejecuta [`03_scripts/init_database.sql`](03_scripts/init_database.sql) para crear la base de datos y los esquemas.
-2. Ejecuta [`03_scripts/bronze/ddl_bronze.sql`](03_scripts/bronze/ddl_bronze.sql) para crear las 6 tablas de la capa Bronze.
-3. Ejecuta [`03_scripts/bronze/proc_load_bronze.sql`](03_scripts/bronze/proc_load_bronze.sql) y corre `EXEC bronze.load_bronze;` para cargar los CSV.
-4. Ejecuta [`04_tests/quality_checks_bronze.sql`](04_tests/quality_checks_bronze.sql) para validar la integridad de la carga.
-
-Consulta la documentación detallada en [`02_docs/data_flow_bronze.md`](02_docs/data_flow_bronze.md) y [`02_docs/convenciones_nomenclatura_es.md`](02_docs/convenciones_nomenclatura_es.md).
+1. Correr `03_scripts/init_database.sql` en SSMS para crear la base de datos `DataWarehouse` y los esquemas `bronze`, `silver` y `gold`.
+2. Correr `03_scripts/bronze/ddl_bronze.sql` para crear las tablas de la capa Bronze.
+3. Correr `03_scripts/bronze/proc_load_bronze.sql` y después ejecutar `EXEC bronze.load_bronze;` (ajustando la ruta local de los CSV si hace falta).
+4. Correr `03_scripts/silver/ddl_silver.sql` y `03_scripts/silver/proc_load_silver.sql` (`EXEC silver.load_silver;`) para limpiar y pasar los datos a Silver.
+5. Correr `03_scripts/gold/ddl_gold.sql` para crear las vistas finales de análisis.
